@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import userRegion from "@/utils/region";
 import Link from "next/link";
 import Image from "next/image";
+import TopBar from "@/components/ui/top_bar";
+import BottomBar from "@/components/ui/bottom_bar";
 
 const ProductPage = ({ params }) => {
   const [product, setProduct] = useState(null); // Default to null to avoid undefined issues
@@ -40,9 +42,8 @@ const ProductPage = ({ params }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <header className="bg-gray-900 w-full p-3 border-b border-gray-700 flex items-center min-h-[60px]">
-        <Link href='/'><h1 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-500 ml-4 sm:ml-6">FlexMood</h1></Link>
-      </header>
+
+      <TopBar />
 
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
         <div className="max-w-4xl mx-auto">
@@ -94,6 +95,7 @@ const ProductPage = ({ params }) => {
           )}
         </div>
       </main>
+      <BottomBar />
     </div>
   );
 };

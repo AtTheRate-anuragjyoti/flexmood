@@ -2,7 +2,6 @@
 import "./globals.css";
 
 
-
 export const metadata = {
   title: "Flexmood",
   description: "the productivity store",

@@ -1,9 +1,11 @@
 'use client';
 
+import BottomBar from '@/components/ui/bottom_bar';
 import SelectRegion from '@/components/ui/select_region';
 import ProductCard from '@/components/ui/products_card';
 import { useEffect, useState } from 'react';
 import userRegion from '@/utils/region';
+import TopBar from '@/components/ui/top_bar';
 
 const MainPage = () => {
   const region = userRegion((state) => state.region);
@@ -28,9 +30,8 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-900 text-white">
-      <header className="bg-gray-900 w-full p-3 border-b border-gray-700 flex items-center min-h-[60px]">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-500 ml-4 sm:ml-6">FlexMood</h1>
-      </header>
+
+      <TopBar />
 
       <main className="p-7 bg-gray-900 h-full">
         {isLoading ? (
@@ -55,11 +56,8 @@ const MainPage = () => {
           </div>
         )}
       </main>
-
-      <footer className="bg-gray-900 border-t border-gray-700 p-3 min-h-[40px] flex items-center justify-center">
-        <p className="text-gray-400 text-sm">&copy; 2024 Flexmood. All rights reserved.</p>
-        <SelectRegion />
-      </footer>
+      <SelectRegion />
+      <BottomBar />
     </div>
   );
 };
