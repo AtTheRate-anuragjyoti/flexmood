@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://flexmood.vercel.app/
+
+# Sitemaps
+Sitemap: https://flexmood.vercel.app/sitemap.xml
