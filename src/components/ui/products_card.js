@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import userRegion from '@/utils/region';
+import localFont from 'next/font/local';
+
+const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
 
 const ProductCard = ({ coverImage, title, price, purchaseLink, serial }) => {
   const region = userRegion((state) => state.region);
@@ -50,7 +53,7 @@ const ProductCard = ({ coverImage, title, price, purchaseLink, serial }) => {
           passHref
         >
           <button className="w-full rounded-md bg-gray-800 py-3 text-sm lg:text-md text-white transition-colors duration-300 hover:bg-gray-700 flex items-center justify-center gap-2">
-            <span>Own it</span>
+            <span className={`${spaceGrotesk.className} text-[16px] font-medium`}>Level Up</span>
           </button>
         </Link>
       </div>
