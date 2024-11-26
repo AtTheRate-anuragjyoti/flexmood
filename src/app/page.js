@@ -36,7 +36,11 @@ const MainPage = () => {
       <main className="p-7 bg-gray-900 h-full">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
-            <p className="text-gray-400 text-lg">Loading books...</p>
+            <div className="text-center">
+              <span className="text-gray-500 inline-block animate-pulse">
+                      Loading Books...
+              </span>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

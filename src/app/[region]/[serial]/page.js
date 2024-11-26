@@ -91,7 +91,11 @@ const ProductPage = ({ params }) => {
               </div>
             </div>
           ) : (
-            <div className="text-center text-gray-500">Loading product...</div>
+            <div className="text-center">
+              <span className="text-gray-500 inline-block animate-pulse">
+                      Loading product...
+              </span>
+            </div>
           )}
         </div>
       </main>
