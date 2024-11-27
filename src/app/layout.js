@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Flexmood - Your Productivity Hub",
+  title: "Flexmood | Master Productivity with Premium Ebooks & Smart Resources",
   description: "Discover Flexmood, the ultimate productivity store offering ebooks, digital content, and resources for teens and ambitious individuals.",
 };
 
