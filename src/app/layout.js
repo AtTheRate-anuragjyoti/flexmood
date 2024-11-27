@@ -6,6 +6,19 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Flexmood",
+    "url": "https://flexmood.vercel.app/",
+    "logo": "https://flexmood.vercel.app/logo.png",
+    "description": "Flexmood offers premium ebooks and tools to help people master productivity.",
+    "sameAs": [
+      "https://www.instagram.com/flexmood.pro/",
+    ]
+  };
+
   return (
     <html lang="en" dir="ltr">
       <head>
@@ -14,6 +27,10 @@ export default function RootLayout({ children }) {
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
         <meta property="og:type" content="website" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body>
         {children}

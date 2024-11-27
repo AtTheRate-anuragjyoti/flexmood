@@ -21,7 +21,7 @@ const ProductCard = ({ coverImage, title, price, purchaseLink, serial }) => {
       <div className="relative w-full bg-gray-900 flex items-center justify-center">
         <Image
           src={coverImage}
-          alt={`Cover of ${title}`}
+          alt={`Cover of ${title} by Flexmood`}
           layout="intrinsic"
           className="object-cover"
           width={150} // Reduced width for smartphones
