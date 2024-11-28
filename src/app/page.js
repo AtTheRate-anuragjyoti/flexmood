@@ -1,5 +1,6 @@
 'use client';
 
+import HeroSection from '@/components/ui/HeroSection';
 import BottomBar from '@/components/ui/bottom_bar';
 import SelectRegion from '@/components/ui/select_region';
 import ProductCard from '@/components/ui/products_card';
@@ -29,16 +30,21 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
 
       <TopBar />
 
-      <main className="p-7 bg-gray-900 h-full">
+      <div className='h-[3px] bg-[#d1d0d0]'></div>
+      <HeroSection />
+      <div className='h-[3px] bg-[#d1d0d0]'></div>
+      
+      {/* Main content with flex-grow to prevent overlap */}
+      <main className="flex-grow p-7 bg-gray-900">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <div className="text-center">
               <span className="text-gray-500 inline-block animate-pulse">
-                      Loading Books...
+                Loading Books...
               </span>
             </div>
           </div>
@@ -60,6 +66,7 @@ const MainPage = () => {
           </div>
         )}
       </main>
+
       <SelectRegion />
       <BottomBar />
     </div>
