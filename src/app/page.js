@@ -31,15 +31,13 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-
       <TopBar />
-
       <div className='h-[3px] bg-[#d1d0d0]'></div>
       <HeroSection />
       <div className='h-[3px] bg-[#d1d0d0]'></div>
       
       {/* Main content with flex-grow to prevent overlap */}
-      <main className="flex-grow p-7 bg-gray-900">
+      <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <div className="text-center">
@@ -49,19 +47,18 @@ const MainPage = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {books
               ?.sort((a, b) => b.serial - a.serial)
               ?.map((book) => (
-                <div key={book.serial} className="flex items-center justify-center">
-                  <ProductCard
-                    coverImage={book.cover_img}
-                    title={book.title}
-                    price={region === 'India' ? book.price?.INR : book.price?.USD}
-                    purchaseLink={book.purchase_link}
-                    serial={book.serial}
-                  />
-                </div>
+                <ProductCard
+                  key={book.serial}
+                  coverImage={book.cover_img}
+                  title={book.title}
+                  price={region === 'India' ? book.price?.INR : book.price?.USD}
+                  purchaseLink={book.purchase_link}
+                  serial={book.serial}
+                />
               ))}
           </div>
         )}
@@ -74,3 +71,4 @@ const MainPage = () => {
 };
 
 export default MainPage;
+

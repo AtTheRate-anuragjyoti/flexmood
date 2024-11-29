@@ -6,7 +6,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -33,8 +32,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        {children}
+            {children}
       </body>
     </html>
   );
 }
+
