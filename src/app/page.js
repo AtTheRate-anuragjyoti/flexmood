@@ -32,9 +32,8 @@ const MainPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       <TopBar />
-      <div className='h-[3px] bg-[#d1d0d0]'></div>
       <HeroSection />
-      <div className='h-[3px] bg-[#d1d0d0]'></div>
+      <div className='h-[1px] bg-gray-600'></div>
       
       {/* Main content with flex-grow to prevent overlap */}
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
