@@ -97,7 +97,7 @@ export default function HeroSection() {
   return (
     <section className="relative w-full overflow-hidden">
       <div className="mx-auto max-w-screen-xl">
-        <div className="relative h-[250px] sm:h-[300px] md:h-[350px] overflow-hidden w-full">
+        <div className="relative h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] overflow-hidden w-full">
           <div
             ref={sliderRef}
             className="absolute left-0 flex h-full w-full transition-transform duration-500 ease-in-out"
@@ -108,21 +108,22 @@ export default function HeroSection() {
             {slides.map((slide, index) => (
               <div
                 key={index}
-                className={`flex h-full w-full flex-shrink-0 flex-col items-center justify-center text-center px-8 ${slide.bgGradient}`}
+                className={`flex h-full w-full flex-shrink-0 flex-col items-center justify-center text-center px-4 sm:px-6 ${slide.bgGradient}`}
               >
-                <h2 className="mb-4 text-2xl sm:text-3xl font-bold text-white">
+                <h2 className="mb-4 text-md sm:text-2xl md:text-3xl font-bold text-white leading-tight sm:leading-snug">
                   &ldquo;{slide.text}&rdquo;
                 </h2>
-                <p className="mb-4 text-lg sm:text-xl text-white font-medium">
+                <p className="mb-4 text-sm sm:text-lg font-medium text-white">
                   - {slide.author}
                 </p>
-                <p className="text-base sm:text-lg text-white w-full max-w-none">
+                <p className="text-[10px] sm:text-base text-white w-full max-w-none">
                   {slide.description}
                 </p>
               </div>
             ))}
           </div>
         </div>
+
         {/* Dots for navigation */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {slides.map((_, index) => (
