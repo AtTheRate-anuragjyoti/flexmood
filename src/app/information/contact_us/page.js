@@ -37,15 +37,7 @@ const ContactUs = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start mt-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <Info className="w-6 h-6 text-[#ED155D] mr-4 mt-1" />
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-800">Note</h3>
-                    <p className="text-gray-600">
-                      Flexmood is operated by Anurag Jyoti, an individual providing resources to help you enhance your productivity. If you have any questions, feel free to reach out to us via email at <span className="text-blue-500">contact.flexmood@gmail.com</span>.
-                    </p>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>
