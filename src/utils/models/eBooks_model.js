@@ -40,8 +40,8 @@ const ebookSchema = new mongoose.Schema({
       required: false, // Optional if not always provided
     },
   },
-  // New field to store the unique 64-character string for public URL
-  download_char: {
+  // Replace download_char with fileName field to store the file name
+  fileName: {
     type: String,
     required: true,
     unique: true, // Ensuring it's unique for each eBook

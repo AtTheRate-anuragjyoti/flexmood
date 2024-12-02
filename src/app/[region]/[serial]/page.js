@@ -72,11 +72,9 @@ const ProductPage = ({ params }) => {
                   </p>
                 </div>
                 <div className="flex flex-col space-y-3 sm:space-y-4">
-                  <Link 
-                    href={region === "India" ? product.purchase_link.ind : product.purchase_link.int} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
+                <Link
+          href={region === 'India' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
+        >
                     <button className="w-full text-sm sm:text-base rounded-md bg-gray-800 py-3 text-white transition-colors duration-300 hover:bg-gray-700 flex flex-row items-center justify-center">
                       <span>Own it</span>
                     </button>
