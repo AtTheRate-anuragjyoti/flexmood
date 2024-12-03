@@ -55,7 +55,6 @@ const MainPage = () => {
                   coverImage={book.cover_img}
                   title={book.title}
                   price={region === 'India' ? book.price?.INR : book.price?.USD}
-                  purchaseLink={book.purchase_link}
                   serial={book.serial}
                 />
               ))}

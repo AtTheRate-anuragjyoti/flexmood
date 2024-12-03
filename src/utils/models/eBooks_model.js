@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const ebookSchema = new mongoose.Schema({
   serial: {
     type: Number,
-    required: true, // Assuming "serial" is mandatory
-    unique: true,   // Ensuring it is unique for each eBook
+    required: true, // Mandatory field
+    unique: true,   // Ensures uniqueness for each eBook
   },
   title: {
     type: String,
@@ -28,23 +28,12 @@ const ebookSchema = new mongoose.Schema({
   },
   cover_img: {
     type: String,
-    required: false, // Optional if not always provided
+    required: false, // Optional field
   },
-  purchase_link: {
-    ind: {
-      type: String,
-      required: false, // Optional if not always provided
-    },
-    int: {
-      type: String,
-      required: false, // Optional if not always provided
-    },
-  },
-  // Replace download_char with fileName field to store the file name
   fileName: {
     type: String,
-    required: true,
-    unique: true, // Ensuring it's unique for each eBook
+    required: true, // Mandatory field
+    unique: true,   // Ensures uniqueness for each eBook
   },
 });
 

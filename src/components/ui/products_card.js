@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import userRegion from '@/utils/region';
 import localFont from 'next/font/local';
-import { ShoppingCart } from 'lucide-react'; // Importing the desired icon
+import { ShoppingCart, Star } from 'lucide-react'; // Using both cart and star icons
 
 const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
 
@@ -13,6 +13,22 @@ const ProductCard = ({ coverImage, title, price, purchaseLink, serial }) => {
 
   const truncateTitle = (text, maxLength) => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+
+  const renderPrice = () => {
+    if (price === 0) {
+      return (
+        <div className="text-md font-bold text-gray-700 mb-4">
+          Free
+        </div>
+      );
+    }
+    return (
+      <div className="text-md font-semibold text-gray-700 mb-4">
+        {region === 'India' ? '₹' : '$'}
+        {price}
+      </div>
+    );
   };
 
   return (
@@ -31,19 +47,19 @@ const ProductCard = ({ coverImage, title, price, purchaseLink, serial }) => {
             {truncateTitle(title, 30)}
           </h2>
         </Link>
-        <div className="text-md font-semibold text-gray-700 mb-4">
-          {region === 'India' ? '₹' : '$'}
-          {price}
-        </div>
+        {renderPrice()}
         <Link
           href={region === 'India' ? `/purchase/india/${serial}` : `/purchase/international/${serial}`}
         >
-
           <button className="w-full flex items-center justify-center gap-2 rounded-md bg-gray-800 py-3 text-white transition-transform duration-300 hover:bg-gray-700">
-            {/* Lucide Icon */}
-            <ShoppingCart className="w-5 h-5" />
+            {/* Conditionally render the icon based on price */}
+            {price === 0 ? (
+              <Star className="w-5 h-5" />
+            ) : (
+              <ShoppingCart className="w-5 h-5" />
+            )}
             <span className={`${spaceGrotesk.className} text-[16px] font-medium`}>
-              Buy Now
+              {price === 0 ? 'Own It' : 'Buy Now'}
             </span>
           </button>
         </Link>

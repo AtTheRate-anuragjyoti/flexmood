@@ -7,11 +7,11 @@ export async function GET() {
     // Connect to MongoDB
     await dbConnect();
     
-    // Fetch data from eBook model
-    const data = await eBook.find();
-    
-    console.log("Fetched eBooks:", data);  // This will log the fetched data in the server logs
-    
+    // Fetch only the required fields from the eBook model
+    const data = await eBook.find().select("serial cover_img title price");
+
+    console.log("Fetched eBooks:", data);  // Logs the fetched data
+
     // Check if data is empty
     if (!data || data.length === 0) {
       console.log("No eBooks found in the database.");
@@ -21,6 +21,6 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching eBooks:", error);
-    return NextResponse.json({ message: "An error occurred", error: error.message}, { status: 500 });
+    return NextResponse.json({ message: "An error occurred", error: error.message }, { status: 500 });
   }
 }
