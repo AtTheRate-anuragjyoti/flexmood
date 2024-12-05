@@ -7,7 +7,7 @@ import BottomBar from "@/components/ui/bottom_bar";
 import Script from "next/script";
 import localFont from "next/font/local";
 
-const onest = localFont({src: './OneSt.ttf'});
+const onest = localFont({src: './Onest.ttf'});
 const funnelDisplay = localFont({ src: './funnelDisplay.ttf' });
 
 const PurchasePage = ({ params }) => {
