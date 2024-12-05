@@ -6,6 +6,9 @@ import Link from "next/link";
 import Image from "next/image";
 import TopBar from "@/components/ui/top_bar";
 import BottomBar from "@/components/ui/bottom_bar";
+import localFont from 'next/font/local';
+
+const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
 
 const ProductPage = ({ params }) => {
   const [product, setProduct] = useState(null); // Default to null to avoid undefined issues
@@ -76,14 +79,14 @@ const ProductPage = ({ params }) => {
           href={region === 'India' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
         >
                     <button className="w-full text-sm sm:text-base rounded-md bg-gray-800 py-3 text-white transition-colors duration-300 hover:bg-gray-700 flex flex-row items-center justify-center">
-                      <span>Own it</span>
+                      <span className={`${spaceGrotesk.className}`}>Own it</span>
                     </button>
                   </Link>
                   <button 
                     onClick={handleShare} 
                     className="w-full text-sm sm:text-base rounded-md border border-gray-700 py-3 text-white transition-colors duration-300 hover:bg-gray-800 flex flex-row items-center justify-center"
                   >
-                    Share
+                    <span className={`${spaceGrotesk.className}`}>Share</span>
                   </button>
                 </div>
               </div>

@@ -1,18 +1,33 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import TopBar from "@/components/ui/top_bar";
 import BottomBar from "@/components/ui/bottom_bar";
 import Script from "next/script";
+import localFont from "next/font/local";
+
+const onest = localFont({src: './OneSt.ttf'});
+const funnelDisplay = localFont({ src: './funnelDisplay.ttf' });
 
 const PurchasePage = ({ params }) => {
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [downloadUrl, setDownloadUrl] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isFailed, setIsFailed] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "" });
+  const [formErrors, setFormErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [downloadLink, setDownloadLink] = useState(null);
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "Name is required";
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = "Invalid email";
+    return errors;
+  };
+
+  const isFormValid = Object.keys(validateForm()).length === 0;
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -28,39 +43,66 @@ const PurchasePage = ({ params }) => {
       } catch (error) {
         console.error("Error fetching product data:", error);
         setIsLoading(false);
+        setErrorMessage("Failed to load product data. Please try again.");
       }
     };
 
     fetchProductData();
   }, [params.serial]);
 
-  const handleFreeDownload = async (fileName) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setFormErrors({ ...formErrors, [name]: "" });
+  };
+
+  const saveUserToDatabase = async () => {
     try {
-      const downloadRes = await fetch("/api/v1/get-download-url", {
+      await fetch("/api/v1/save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName }),
+        body: JSON.stringify({
+          ...formData,
+          booksPurchased: [
+            {
+              title: product.title,
+              price: params.region === "india" ? product.price.INR : product.price.USD,
+              currency: params.region === "india" ? "INR" : "USD",
+            },
+          ],
+        }),
       });
-
-      const downloadData = await downloadRes.json();
-      if (downloadData?.url) {
-        setDownloadUrl(downloadData.url);
-        triggerDownload(downloadData.url, fileName);
-      }
+      console.log("User data saved successfully");
     } catch (error) {
-      console.error("Error downloading file:", error);
-      setErrorMessage("Error downloading file. Please try again.");
+      console.error("Error saving user data:", error);
+      setErrorMessage("Failed to save user data. Please contact support if you don't receive your eBook.");
     }
   };
 
-  const triggerDownload = async (url, fileName) => {
+  const triggerDownload = async () => {
     try {
-      const response = await fetch(url);
+      if (!downloadLink) {
+        const downloadRes = await fetch("/api/v1/get-download-url", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: product?.fileName }),
+        });
+        const downloadData = await downloadRes.json();
+        
+        if (downloadData?.url) {
+          setDownloadLink(downloadData.url);
+        } else {
+          setErrorMessage("Download link is not available. Please contact support.");
+          return;
+        }
+      }
+
+      const response = await fetch(downloadLink);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = fileName || "download.pdf";
+      link.download = `${product.fileName}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -72,11 +114,22 @@ const PurchasePage = ({ params }) => {
   };
 
   const handleBuyNow = async () => {
-    try {
-      setIsProcessing(true);
-      setIsFailed(false);
-      setErrorMessage("");
+    const errors = validateForm();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
+    setIsProcessing(true);
+    setErrorMessage("");
+
+    // If product is free or download link exists
+    if (downloadLink || (params.region === "india" ? product?.price?.INR : product?.price?.USD) === 0) {
+      await saveUserToDatabase();
+      await triggerDownload();
+      setIsProcessing(false);
+      return;
+    }
+
+    try {
       const res = await fetch("/api/v1/razorpay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,26 +150,25 @@ const PurchasePage = ({ params }) => {
         description: product?.title,
         image: "/logo.png",
         handler: async function (response) {
-          const downloadRes = await fetch("/api/v1/get-download-url", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fileName: product?.fileName }),
-          });
-
-          const downloadData = await downloadRes.json();
-          if (downloadData?.url) {
-            setDownloadUrl(downloadData.url);
+          if (response.razorpay_payment_id) {
+            await saveUserToDatabase();
+            await triggerDownload();
+          } else {
+            setErrorMessage("Payment was not successful. Please try again to complete the purchase.");
           }
           setIsProcessing(false);
         },
         prefill: {
-          name: "",
-          email: "",
-          contact: "",
+          name: formData.name,
+          email: formData.email,
         },
-        theme: {
-          color: "#3b82f6",
-        },
+        theme: { color: "#10B981" },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+            setErrorMessage("Payment was cancelled. Please complete the purchase to download.");
+          }
+        }
       };
 
       const razorpayInstance = new Razorpay(options);
@@ -124,31 +176,57 @@ const PurchasePage = ({ params }) => {
 
       razorpayInstance.on("payment.failed", function (response) {
         setIsProcessing(false);
-        setIsFailed(true);
-        setErrorMessage("Payment failed. Please try again.");
-        setTimeout(() => setIsFailed(false), 3000);
+        setErrorMessage("Payment failed. Please try again to complete the purchase.");
       });
     } catch (error) {
       setIsProcessing(false);
-      setIsFailed(true);
       setErrorMessage("An error occurred. Please try again.");
-      setTimeout(() => setIsFailed(false), 3000);
     }
   };
 
   const price =
     params.region === "india"
-      ? `₹${product?.price?.INR?.toFixed(2) || "N/A"}`
-      : `$${product?.price?.USD?.toFixed(2) || "N/A"}`;
+      ? product?.price?.INR
+      : product?.price?.USD;
+
+  const isFree = price === 0;
+
+  const buttonText = isProcessing
+    ? "Processing..."
+    : downloadLink
+    ? "Download Available"
+    : isFree
+    ? "Download for Free"
+    : `Buy for ${params.region === "india" ? `₹${price}` : `$${price}`}`;
+
+  const buttonStyles = isProcessing
+    ? "bg-gray-400 cursor-not-allowed"
+    : downloadLink || (isFree && isFormValid)
+    ? "bg-green-500 hover:bg-green-600"
+    : isFormValid
+    ? "bg-blue-600 hover:bg-blue-700"
+    : "bg-gray-400 cursor-not-allowed";
+
+  // Rest of the component remains the same as previous version
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+        <TopBar />
+        <main className="flex-grow flex items-center justify-center">
+          <p className="text-2xl font-semibold animate-pulse">Loading product...</p>
+        </main>
+        <BottomBar />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+      {/* Rest of the render method is the same as previous version */}
       <TopBar />
       <main className="flex-grow flex flex-col md:flex-row border-t border-gray-700">
-        <div className="w-full md:w-[60%] border-r border-gray-700 p-8 flex flex-col items-center justify-center">
-          {isLoading ? (
-            <div className="w-48 h-72 bg-gray-700 animate-pulse rounded-lg"></div>
-          ) : product ? (
+        <div className="w-full md:w-[60%] p-8 flex flex-col items-center justify-center">
+          {product && (
             <>
               <Image
                 src={product.cover_img}
@@ -159,66 +237,73 @@ const PurchasePage = ({ params }) => {
               />
               <h1 className="text-2xl font-bold mb-2 text-center">{product.title}</h1>
               <p className="text-gray-400 text-sm mb-4">by {product.author}</p>
-              <p className="text-xl font-semibold">{price}</p>
+              <p className="text-xl font-semibold">
+                {isFree ? "Free" : params.region === "india" ? `₹${price}` : `$${price}`}
+              </p>
             </>
-          ) : (
-            <p className="text-gray-500">Product not found.</p>
           )}
         </div>
-
         <div className="w-full md:w-[40%] p-6 flex flex-col justify-center items-center">
-          <h2 className="text-lg font-semibold mb-6 text-center">
-            Complete Your Purchase
-          </h2>
-          {!downloadUrl ? (
-            product?.price?.INR === 0 || product?.price?.USD === 0 ? (
-              <button
-                onClick={() => handleFreeDownload(product.fileName)}
-                className="w-full max-w-sm py-3 font-medium rounded-md transition-colors duration-200 bg-green-600 hover:bg-green-700"
-              >
-                Download for Free
-              </button>
-            ) : (
-              <button
-                onClick={handleBuyNow}
-                disabled={isLoading || !product || isProcessing}
-                className={`w-full max-w-sm py-3 font-medium rounded-md transition-colors duration-200 flex items-center justify-center gap-2 ${
-                  isLoading || !product || isProcessing
-                    ? "bg-gray-700 cursor-not-allowed"
-                    : isFailed
-                    ? "bg-red-600"
-                    : "bg-blue-600 hover:bg-blue-700"
-                }`}
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-                    Processing...
-                  </>
-                ) : (
-                  `Buy Now - ${price}`
-                )}
-              </button>
-            )
-          ) : (
+          <form className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg space-y-6">
+            <h2 className={`text-2xl font-semibold text-center mb-2 ${funnelDisplay.className}`}>Complete Your Purchase</h2>
+            <p className="text-center text-sm text-gray-400 mb-4">
+              {isFree
+                ? "Please fill out the form below to download your free eBook."
+                : "Please fill out the form below to complete your purchase and download the eBook."}
+            </p>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={`w-full h-12 px-4 text-gray-900 rounded-md bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-150 ease-in-out ${onest.className} font-medium`}
+                  placeholder="Enter your name"
+                />
+                {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`w-full h-12 px-4 text-gray-900 rounded-md bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-150 ease-in-out ${onest.className} font-medium`}
+                  placeholder="Enter your email"
+                />
+                {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+              </div>
+            </div>
             <button
-              onClick={() => triggerDownload(downloadUrl, product?.fileName)}
-              className="w-full max-w-sm py-3 font-medium rounded-md transition-colors duration-200 bg-green-600 hover:bg-green-700"
+              onClick={handleBuyNow}
+              disabled={!isFormValid && !downloadLink || isProcessing}
+              className={`w-full h-12 rounded-md flex items-center justify-center mt-6 font-medium text-white transition duration-150 ease-in-out ${buttonStyles}`}
             >
-              Download eBook
+              {isProcessing && (
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              )}
+              {buttonText}
             </button>
-          )}
-          {isFailed && (
-            <p className="text-red-500 text-sm mt-3">{errorMessage}</p>
+          </form>
+          {errorMessage && (
+            <p className="text-red-500 text-sm mt-4 text-center max-w-md">{errorMessage}</p>
           )}
         </div>
       </main>
       <BottomBar />
-
-      <Script
-        strategy="afterInteractive"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-      />
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     </div>
   );
 };

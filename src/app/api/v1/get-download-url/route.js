@@ -24,7 +24,7 @@ export async function POST(req) {
     // Generate a signed URL valid for 2 hours
     const { data, error } = await supabase.storage
       .from(bucketName)
-      .createSignedUrl(filePath, 2 * 60 * 60 , {
+      .createSignedUrl(filePath, 60 * 60 , {
         headers: {
           'Content-Type': 'application/pdf',
           'Content-Disposition': `attachment; filename=${fileName}.pdf`,
