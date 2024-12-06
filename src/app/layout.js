@@ -10,8 +10,8 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Flexmood",
-    "url": "https://flexmood.vercel.app/",
-    "logo": "https://flexmood.vercel.app/logo.png",
+    "url": "https://flexmood.store/",
+    "logo": "https://flexmood.store/logo.png",
     "description": "Flexmood offers premium ebooks and tools to help people master productivity.",
     "sameAs": [
       "https://www.instagram.com/flexmood.pro/",
