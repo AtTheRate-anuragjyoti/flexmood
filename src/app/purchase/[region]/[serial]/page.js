@@ -212,8 +212,12 @@ const PurchasePage = ({ params }) => {
     return (
       <div className="flex flex-col min-h-screen bg-gray-900 text-white">
         <TopBar />
-        <main className="flex-grow flex items-center justify-center">
-          <p className="text-2xl font-semibold animate-pulse">Loading product...</p>
+        <main className="flex-grow flex justify-center items-center">
+          <div className="text-center">
+            <span className="text-gray-500 inline-block animate-pulse">
+              Loading Product...
+            </span>
+          </div>
         </main>
         <BottomBar />
       </div>
