@@ -6,16 +6,11 @@ import TopBar from "@/components/ui/top_bar";
 import BottomBar from "@/components/ui/bottom_bar";
 import Script from "next/script";
 import localFont from "next/font/local";
-import { useRouter } from "next/navigation";
 
 const onest = localFont({src: './Onest.ttf'});
 const funnelDisplay = localFont({ src: './funnelDisplay.ttf' });
 
-
 const PurchasePage = ({ params }) => {
-
-  const router = useRouter();
-
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -33,7 +28,7 @@ const PurchasePage = ({ params }) => {
   };
 
   const isFormValid = Object.keys(validateForm()).length === 0;
-  
+
   useEffect(() => {
     const fetchProductData = async () => {
       try {
@@ -42,12 +37,6 @@ const PurchasePage = ({ params }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ serial: params.serial }),
         });
-  
-        if (!res.ok) {
-          router.push("/404"); // Redirect to custom 404 page if response is not ok
-          return;
-        }
-  
         const data = await res.json();
         setProduct(data);
         setIsLoading(false);
@@ -57,10 +46,9 @@ const PurchasePage = ({ params }) => {
         setErrorMessage("Failed to load product data. Please try again.");
       }
     };
-  
+
     fetchProductData();
-  }, [params.serial, router]);
-  
+  }, [params.serial]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

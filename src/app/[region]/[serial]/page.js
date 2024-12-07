@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { notFound } from "next/navigation";
 import userRegion from "@/utils/region";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,7 +12,8 @@ import localFont from 'next/font/local';
 const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
 
 const ProductPage = ({ params }) => {
-  const [product, setProduct] = useState(null); // Default to null to avoid undefined issues
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState(false);
   const region = userRegion((state) => state.region);
 
   useEffect(() => {
@@ -21,15 +23,37 @@ const ProductPage = ({ params }) => {
           method: 'POST',
           body: JSON.stringify({ serial: params.serial }),
         });
+        
+        if (!res.ok) {
+          // Handle non-200 responses
+          setError(true);
+          return;
+        }
+        
         const data = await res.json();
+        
+        // Check if product is null or undefined
+        if (!data || Object.keys(data).length === 0) {
+          setError(true);
+          return;
+        }
+        
         setProduct(data);
       } catch (error) {
         console.log("An error occurred", error);
+        setError(true);
       }
     };
 
     getProductData();
   }, [params.serial]);
+
+  // Trigger notFound() when error is true
+  useEffect(() => {
+    if (error) {
+      notFound();
+    }
+  }, [error]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -43,9 +67,9 @@ const ProductPage = ({ params }) => {
     }
   };
 
+  // Rest of the component remains the same
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-
       <TopBar />
 
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
@@ -75,9 +99,9 @@ const ProductPage = ({ params }) => {
                   </p>
                 </div>
                 <div className="flex flex-col space-y-3 sm:space-y-4">
-                <Link
-          href={region === 'India' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
-        >
+                  <Link
+                    href={region === 'India' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
+                  >
                     <button className="w-full text-sm sm:text-base rounded-md bg-gray-800 py-3 text-white transition-colors duration-300 hover:bg-gray-700 flex flex-row items-center justify-center">
                       <span className={`${spaceGrotesk.className}`}>Own it</span>
                     </button>
@@ -94,7 +118,7 @@ const ProductPage = ({ params }) => {
           ) : (
             <div className="text-center">
               <span className="text-gray-500 inline-block animate-pulse">
-                      Loading product...
+                Loading product...
               </span>
             </div>
           )}
