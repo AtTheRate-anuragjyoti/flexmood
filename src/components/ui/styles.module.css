@@ -1,0 +1,69 @@
+.freeProductShine {
+  position: relative;
+  overflow: hidden;
+}
+
+.greyBackground {
+  position: relative;
+  overflow: hidden;
+}
+
+.greyBackground::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent,
+    rgba(17, 24, 39, 0.2),
+    rgba(59, 70, 95, 0.352),
+    rgba(59, 70, 95, 0.352),
+    rgba(17, 24, 39, 0.2),
+    transparent
+  );
+  animation: greyshine 3s infinite linear;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.freeProductShine > div:last-child::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 1),
+    rgba(244, 235, 152, 0.404),
+    rgba(244, 235, 152, 0.404),
+    rgba(255, 255, 255, 1),
+    transparent
+  );
+  animation: whiteshine 4s infinite linear;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes greyshine {
+  0% {
+    left: -200%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes whiteshine {
+  0% {
+    left: -300%;
+  }
+  100% {
+    left: 100%;
+  }
+}
