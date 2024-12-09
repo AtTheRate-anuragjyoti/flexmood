@@ -11,9 +11,7 @@ import { useRouter } from "next/navigation";
 const onest = localFont({src: './Onest.ttf'});
 const funnelDisplay = localFont({ src: './funnelDisplay.ttf' });
 
-
 const PurchasePage = ({ params }) => {
-
   const router = useRouter();
 
   const [product, setProduct] = useState(null);
@@ -22,7 +20,7 @@ const PurchasePage = ({ params }) => {
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [formErrors, setFormErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const [downloadLink, setDownloadLink] = useState(null);
+  const [downloadAvailable, setDownloadAvailable] = useState(false);
 
   const validateForm = () => {
     const errors = {};
@@ -44,7 +42,7 @@ const PurchasePage = ({ params }) => {
         });
   
         if (!res.ok) {
-          router.push("/404"); // Redirect to custom 404 page if response is not ok
+          router.push("/404");
           return;
         }
   
@@ -84,7 +82,7 @@ const PurchasePage = ({ params }) => {
           ],
         }),
       });
-      console.log("User data saved successfully");
+
     } catch (error) {
       console.error("Error saving user data:", error);
       setErrorMessage("Failed to save user data. Please contact support if you don't receive your eBook.");
@@ -93,38 +91,60 @@ const PurchasePage = ({ params }) => {
 
   const triggerDownload = async () => {
     try {
-      if (!downloadLink) {
-        const downloadRes = await fetch("/api/v1/get-download-url", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fileName: product?.fileName }),
-        });
-        const downloadData = await downloadRes.json();
-        
-        if (downloadData?.url) {
-          setDownloadLink(downloadData.url);
-        } else {
-          setErrorMessage("Download link is not available. Please contact support.");
-          return;
-        }
-      }
+      const downloadRes = await fetch("/api/v1/get-download-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: product?.fileName }),
+      });
+  
+      const downloadData = await downloadRes.json();
 
-      const response = await fetch(downloadLink);
+  
+      if (!downloadRes.ok || !downloadData.url) {
+        throw new Error(
+          downloadData.error || "Failed to retrieve download link."
+        );
+      }
+  
+      // Fetch the file content
+      const response = await fetch(downloadData.url);
+  
+
+  
+      if (!response.ok) {
+        throw new Error("Failed to download the file.");
+      }
+  
+      // Log content type and length
+
+  
       const blob = await response.blob();
+
+  
+      // Create a temporary URL for downloading the file
       const blobUrl = window.URL.createObjectURL(blob);
+  
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = `${product.fileName}.pdf`;
+      link.download = `${product.fileName}.pdf`; 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+  
+      // Clean up the blob URL
       window.URL.revokeObjectURL(blobUrl);
+
+      // Set download availability
+      setDownloadAvailable(true);
     } catch (error) {
-      console.error("Error downloading file:", error);
-      setErrorMessage("Error downloading file. Please try again.");
+      console.error("Detailed Download Error:", error);
+      console.error("Error Stack:", error.stack);
+      setErrorMessage(
+        `Download failed: ${error.message}. Please check the console for details.`
+      );
     }
   };
-
+  
   const handleBuyNow = async () => {
     const errors = validateForm();
     setFormErrors(errors);
@@ -133,9 +153,8 @@ const PurchasePage = ({ params }) => {
     setIsProcessing(true);
     setErrorMessage("");
 
-    // If product is free or download link exists
-    if (downloadLink || (params.region === "india" ? product?.price?.INR : product?.price?.USD) === 0) {
-      await saveUserToDatabase();
+    // If product is free or download is available
+    if (downloadAvailable || (params.region === "india" ? product?.price?.INR : product?.price?.USD) === 0) {
       await triggerDownload();
       setIsProcessing(false);
       return;
@@ -164,7 +183,7 @@ const PurchasePage = ({ params }) => {
         handler: async function (response) {
           if (response.razorpay_payment_id) {
             await saveUserToDatabase();
-            await triggerDownload();
+            setDownloadAvailable(true);
           } else {
             setErrorMessage("Payment was not successful. Please try again to complete the purchase.");
           }
@@ -205,21 +224,21 @@ const PurchasePage = ({ params }) => {
 
   const buttonText = isProcessing
     ? "Processing..."
-    : downloadLink
-    ? "Download Available"
+    : downloadAvailable
+    ? "Download Now"
     : isFree
     ? "Download for Free"
     : `Buy for ${params.region === "india" ? `₹${price}` : `$${price}`}`;
 
   const buttonStyles = isProcessing
     ? "bg-gray-400 cursor-not-allowed"
-    : downloadLink || (isFree && isFormValid)
+    : downloadAvailable || (isFree && isFormValid)
     ? "bg-green-500 hover:bg-green-600"
     : isFormValid
     ? "bg-blue-600 hover:bg-blue-700"
     : "bg-gray-400 cursor-not-allowed";
 
-  // Rest of the component remains the same as previous version
+  // Rest of the component remains the same
   if (isLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-gray-900 text-white">
@@ -238,7 +257,6 @@ const PurchasePage = ({ params }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      {/* Rest of the render method is the same as previous version */}
       <TopBar />
       <main className="flex-grow flex flex-col md:flex-row border-t border-gray-700">
         <div className="w-full md:w-[60%] p-8 flex flex-col items-center justify-center">
@@ -301,7 +319,7 @@ const PurchasePage = ({ params }) => {
             </div>
             <button
               onClick={handleBuyNow}
-              disabled={!isFormValid && !downloadLink || isProcessing}
+              disabled={!isFormValid && !downloadAvailable || isProcessing}
               className={`w-full h-12 rounded-md flex items-center justify-center mt-6 font-medium text-white transition duration-150 ease-in-out ${buttonStyles}`}
             >
               {isProcessing && (

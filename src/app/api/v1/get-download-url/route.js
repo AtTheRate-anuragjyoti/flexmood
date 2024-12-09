@@ -1,4 +1,4 @@
-import supabase from "@/utils/supabaseClient";
+import supabase from "@/utils/supabaseClient"; // Your Supabase client
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -16,32 +16,35 @@ export async function POST(req) {
     }
 
     const bucketName = "ebooks"; // Your Supabase bucket name
+    const filePath = `${fileName}.pdf`; // Ensure correct file extension
 
-    // Append '.pdf' to the file name to ensure it's correct
-    const filePath = `${fileName}.pdf`;
-    console.log("Generated file path with extension:", filePath); // Debugging log
+    console.log("Generated file path:", filePath); // Debugging log
 
-    // Generate a signed URL valid for 2 hours
+    // Generate a signed URL (valid for 2 hours)
     const { data, error } = await supabase.storage
       .from(bucketName)
-      .createSignedUrl(filePath, 60 * 60 , {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename=${fileName}.pdf`,
+      .createSignedUrl(filePath, 60 * 60 * 2, {
+        transform: {
+          headers: {
+            "Content-Type": "application/pdf",
+            "Content-Disposition": `attachment; filename=${fileName}.pdf`,
+          },
         },
-      }); // Expires in 2 hours
+      });
 
     if (error) {
-      console.error("Error generating signed URL:", error);
+      console.error("Error generating signed URL:", error.message); // Log details
       return NextResponse.json(
         { error: "Failed to generate download URL", details: error.message },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ url: data?.signedUrl }); // Send back the signed URL
+    console.log("Generated signed URL:", data?.signedUrl); // Debugging log
+
+    return NextResponse.json({ url: data.signedUrl }); // Send signed URL back to client
   } catch (error) {
-    console.error("Error handling request:", error);
+    console.error("Server error:", error.message); // Log unexpected server error
     return NextResponse.json(
       { error: "Internal server error", details: error.message },
       { status: 500 }

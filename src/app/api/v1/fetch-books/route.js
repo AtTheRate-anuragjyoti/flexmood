@@ -18,7 +18,11 @@ export async function GET() {
       return NextResponse.json({ message: "No eBooks found" }, { status: 404 });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: {
+        "Cache-Control": "public, max-age=60, stale-while-revalidate=30",
+      }
+    });
   } catch (error) {
     console.error("Error fetching eBooks:", error);
     return NextResponse.json({ message: "An error occurred", error: error.message }, { status: 500 });
