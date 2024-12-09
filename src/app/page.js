@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import userRegion from '@/utils/region';
 import TopBar from '@/components/ui/top_bar';
 
+
 const MainPage = () => {
   const region = userRegion((state) => state.region);
   const [books, setBooks] = useState([]);
@@ -34,6 +35,7 @@ const MainPage = () => {
       <TopBar />
       <HeroSection />
       <div className='h-[1px] bg-gray-600'></div>
+
       
       {/* Main content with flex-grow to prevent overlap */}
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">

@@ -135,6 +135,7 @@ const PurchasePage = ({ params }) => {
       window.URL.revokeObjectURL(blobUrl);
 
       // Set download availability
+      await saveUserToDatabase();
       setDownloadAvailable(true);
     } catch (error) {
       console.error("Detailed Download Error:", error);
