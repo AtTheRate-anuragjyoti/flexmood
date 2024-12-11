@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
@@ -55,41 +56,75 @@ const slides = [
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
   const sliderRef = useRef(null);
+  const timerRef = useRef(null);
 
-  const nextSlide = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      // Transition to the next slide
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-    }
-  };
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    resetAutoSlideTimer();
+  }, []);
 
-  const goToSlide = (index) => {
-    if (!isTransitioning && index !== currentSlide) {
-      setIsTransitioning(true);
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prevSlide) => 
+      prevSlide === 0 ? slides.length - 1 : prevSlide - 1
+    );
+    resetAutoSlideTimer();
+  }, []);
+
+  const goToSlide = useCallback((index) => {
+    if (index !== currentSlide) {
       setCurrentSlide(index);
+      resetAutoSlideTimer();
+    }
+  }, [currentSlide]);
+
+  const resetAutoSlideTimer = useCallback(() => {
+    // Clear existing timer
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    
+    // Reset timer
+    timerRef.current = setTimeout(nextSlide, 5000);
+  }, [nextSlide]);
+
+  // Touch event handlers for mobile
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    const touchEnd = e.changedTouches[0].clientX;
+    const touchDiff = touchStart - touchEnd;
+
+    if (Math.abs(touchDiff) > 50) {
+      if (touchDiff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
     }
   };
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    // Initial timer setup
+    resetAutoSlideTimer();
 
-  useEffect(() => {
-    if (sliderRef.current) {
-      const transitionEndHandler = () => setIsTransitioning(false);
-      sliderRef.current.addEventListener("transitionend", transitionEndHandler);
-      return () => {
-        sliderRef.current?.removeEventListener("transitionend", transitionEndHandler);
-      };
-    }
-  }, []);
+    // Cleanup function
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [resetAutoSlideTimer]);
 
   return (
-    <section className="relative w-full overflow-hidden bg-black">
+    <section 
+      className="relative w-full overflow-hidden bg-black"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="mx-auto max-w-screen-xl">
         <div className="relative h-[300px] sm:h-[350px] md:h-[calc(100vh-60px)] lg:h-[calc(100vh-60px)] overflow-hidden w-full">
           <div
@@ -122,17 +157,41 @@ export default function HeroSection() {
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Dots Navigation */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full ${currentSlide === index ? 'bg-white shadow-[0_0_6px_2px_rgba(255,255,255,0.8)]' : 'bg-gray-500'} transition-all duration-300`}
-            ></button>
-          ))}
+          {/* Desktop Navigation Buttons */}
+          <div className="hidden md:block">
+            <button 
+              onClick={prevSlide} 
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 z-30"
+            >
+              <ChevronLeft 
+                className="text-white opacity-50 hover:opacity-100 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]" 
+                size={32} 
+                strokeWidth={1.5}
+              />
+            </button>
+            <button 
+              onClick={nextSlide} 
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 z-30"
+            >
+              <ChevronRight 
+                className="text-white opacity-50 hover:opacity-100 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]" 
+                size={32} 
+                strokeWidth={1.5}
+              />
+            </button>
+          </div>
+
+          {/* Dots Navigation */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-2 h-2 rounded-full ${currentSlide === index ? 'bg-white shadow-[0_0_6px_2px_rgba(255,255,255,0.8)]' : 'bg-gray-500'} transition-all duration-300`}
+              ></button>
+            ))}
+          </div>
         </div>
       </div>
     </section>
