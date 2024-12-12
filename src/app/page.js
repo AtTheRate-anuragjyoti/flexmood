@@ -17,10 +17,7 @@ const MainPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch('/api/v1/fetch-books/', { 
-          cache: 'no-store',
-          next: { revalidate: 0 }
-        });
+        const response = await fetch(`/api/v1/fetch-books/?t=${new Date().getTime()}`);
         const jsonData = await response.json();
         setBooks(jsonData);
       } catch (error) {
