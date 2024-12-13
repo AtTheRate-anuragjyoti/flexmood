@@ -35,6 +35,17 @@ const ebookSchema = new mongoose.Schema({
     required: true, // Mandatory field
     unique: true,   // Ensures uniqueness for each eBook
   },
+  category: {
+    tabs: {
+      type: [String], // Array of strings for category tabs
+      required: true, // Mandatory field
+      default: ["ambitious"], // Default value
+    },
+    tags: {
+      type: [String], // Array of strings for tags
+      required: false, // Optional field
+    },
+  },
 });
 
 // Corrected model creation and naming
