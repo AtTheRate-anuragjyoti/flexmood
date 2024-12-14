@@ -99,7 +99,7 @@ const ProductPage = ({ params }) => {
                 </div>
                 <div className="flex flex-col space-y-3 sm:space-y-4">
                   <Link
-                    href={region === 'India' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
+                    href={region === 'india' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
                   >
                     <button className="w-full text-sm sm:text-base rounded-md bg-gray-800 py-3 text-white transition-colors duration-300 hover:bg-gray-700 flex flex-row items-center justify-center">
                       <span className={`${spaceGrotesk.className}`}>Own it</span>
