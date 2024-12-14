@@ -20,7 +20,7 @@ const CategoryBar = ({ selectedCategory, setSelectedCategory }) => {
   ];
 
   const handleCategoryClick = (categoryId) => {
-    setSelectedCategory(categoryId); // Update the state in the parent component
+    setSelectedCategory(categoryId);
   };
 
   return (
@@ -42,18 +42,14 @@ const CategoryBar = ({ selectedCategory, setSelectedCategory }) => {
             bg-gradient-to-r
             ${category.gradient}
             relative
-            ${selectedCategory === category.id ? 'opacity-100' : 'opacity-90'}
-            focus:outline-none
-            transition-opacity
-            duration-300
+            transition-all
+            duration-500
             ease-in-out
             whitespace-nowrap
             overflow-hidden
-            ${
-              selectedCategory !== category.id
-                ? 'after:absolute after:inset-0 after:bg-black/60 after:z-10'
-                : ''
-            }
+            ${selectedCategory === category.id 
+              ? 'opacity-100 shadow-md shadow-black/30' 
+              : 'opacity-40'}
           `}
         >
           {category.label}

@@ -1,4 +1,3 @@
-// components/ui/products_card.tsx
 'use client';
 
 import Link from 'next/link';
@@ -9,8 +8,6 @@ import { ShoppingCart, Star } from 'lucide-react';
 import styles from './styles.module.css';
 
 const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
-
-
 
 const ProductCard = ({ coverImage, title, price, serial }) => {
   const region = userRegion((state) => state.region);
@@ -43,7 +40,7 @@ const ProductCard = ({ coverImage, title, price, serial }) => {
           alt={`Cover of ${title} by Flexmood`}
           width={150}
           height={200}
-          className="relative z-10"
+          className="relative z-10 max-md:w-[203px] max-md:h-[270px] object-contain"
         />
       </div>
       <div className="p-4 relative z-10">

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
-import userRegion from "@/utils/region";
 import Link from "next/link";
 import Image from "next/image";
 import TopBar from "@/components/ui/top_bar";
@@ -14,7 +13,7 @@ const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
 const ProductPage = ({ params }) => {
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(false);
-  const region = userRegion((state) => state.region);
+  const region = params.region;
 
   useEffect(() => {
     const getProductData = async () => {
@@ -93,7 +92,7 @@ const ProductPage = ({ params }) => {
                   <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">{product.title}</h2>
                   <p className="text-sm sm:text-base md:text-lg text-gray-400 mb-4">by {product.author}</p>
                   <p className="text-lg sm:text-xl md:text-2xl font-semibold mb-6">
-                    {region === "India" 
+                    {region === "india" 
                       ? `₹${product?.price?.INR?.toFixed(2) || "N/A"}` 
                       : `$${product?.price?.USD?.toFixed(2) || "N/A"}`}
                   </p>

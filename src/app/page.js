@@ -70,18 +70,22 @@ const MainPage = () => {
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
-            <div className="text-center">
-              <span className="text-gray-500 inline-block animate-pulse">
-                Loading Books...
+            <div className="flex flex-col items-center space-y-4">
+              <div className="w-16 h-16 border-4 border-transparent border-t-4 border-t-blue-500 border-r-4 border-r-blue-500 rounded-full animate-spin"></div>
+              <span className="text-lg font-semibold text-blue-400 tracking-wide">
+                Discovering Books...
               </span>
             </div>
           </div>
         ) : categoryLoading ? (
-          <div className="flex justify-center items-center h-full">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-7 h-7 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
-              <p className="mt-2 text-gray-400 animate-pulse">Showing Up...</p>
-            </div>
+          <div className="flex justify-center items-center h-full w-full min-h-[30vh]">
+            <div 
+              className="w-12 h-12 border-4 rounded-full animate-spin" 
+              style={{
+                borderColor: '#ED155D transparent #ED155D transparent',
+                borderWidth: '4px'
+              }}
+            ></div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
