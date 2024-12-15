@@ -53,7 +53,7 @@ const ProductCard = ({ coverImage, title, price, serial }) => {
         <Link 
           href={region === 'India' ? `/purchase/india/${serial}` : `/purchase/international/${serial}`}
         >
-          <button className="w-full flex items-center justify-center gap-2 rounded-md bg-gradient-to-b from-slate-800 to-slate-900 py-3 text-white transition-transform duration-300 hover:bg-gray-700 relative z-10">
+          <button className="w-full flex items-center justify-center gap-2 rounded-md bg-gradient-to-b from-slate-800 to-slate-900 py-3 text-white transition-transform duration-300 hover:from-gray-700 hover:to-gray-800 relative z-10">
             {price === 0 ? (
               <Star className="w-5 h-5" />
             ) : (
