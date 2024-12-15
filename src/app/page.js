@@ -13,7 +13,6 @@ const MainPage = () => {
 
   const [books, setBooks] = useState([]); // Store all books
   const [filteredBooks, setFilteredBooks] = useState([]); // Store filtered books
-  const [isLoading, setIsLoading] = useState(true); // Overall loading state
   const [categoryLoading, setCategoryLoading] = useState(false); // Category change loading state
   const [selectedCategory, setSelectedCategory] = useState('ambitious'); // Default category set to 'ambitious'
 
@@ -21,7 +20,6 @@ const MainPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        setIsLoading(true);
         const response = await fetch(`/api/v1/fetch-books/?t=${new Date().getTime()}`);
         const jsonData = await response.json();
         setBooks(jsonData);
@@ -30,8 +28,6 @@ const MainPage = () => {
         );
       } catch (error) {
         console.log('An error occurred', error);
-      } finally {
-        setIsLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -68,16 +64,7 @@ const MainPage = () => {
 
       {/* Main content */}
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
-        {isLoading ? (
-          <div className="flex justify-center items-center h-full">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 border-4 border-transparent border-t-4 border-t-blue-500 border-r-4 border-r-blue-500 rounded-full animate-spin"></div>
-              <span className="text-lg font-semibold text-blue-400 tracking-wide">
-                Discovering Books...
-              </span>
-            </div>
-          </div>
-        ) : categoryLoading ? (
+        {categoryLoading ? (
           <div className="flex justify-center items-center h-full w-full min-h-[30vh]">
             <div 
               className="w-12 h-12 border-4 rounded-full animate-spin" 

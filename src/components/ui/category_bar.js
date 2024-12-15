@@ -1,5 +1,9 @@
 'use client';
 
+import localFont from "next/font/local";
+
+const ebGaramond = localFont({ src: './EBGaramond.ttf' });
+
 const CategoryBar = ({ selectedCategory, setSelectedCategory }) => {
   const categories = [
     {
@@ -33,10 +37,10 @@ const CategoryBar = ({ selectedCategory, setSelectedCategory }) => {
             flex-1
             px-4
             py-3
-            text-xs
+            text-[15px]
             sm:text-sm
             md:text-base
-            lg:text-lg
+            lg:text-xl
             font-serif
             text-white
             bg-gradient-to-r
@@ -47,6 +51,7 @@ const CategoryBar = ({ selectedCategory, setSelectedCategory }) => {
             ease-in-out
             whitespace-nowrap
             overflow-hidden
+            ${ebGaramond.className}
             ${selectedCategory === category.id 
               ? 'opacity-100 shadow-md shadow-black/30' 
               : 'opacity-40'}
