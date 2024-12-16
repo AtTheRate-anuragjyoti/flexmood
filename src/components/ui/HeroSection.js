@@ -48,7 +48,7 @@ const slides = [
     description: "Flexmood unlocks the secrets of persuasion to build deeper, unshakable relationships.",
     bgGradient: "from-black via-crimson-700 to-deep-pink",
     image: influence,
-    overlayColor: "bg-gradient-to-r from-deep-purple-900/70 to-crimson-700/70"
+    overlayColor: "bg-gradient-to-r from-rose-900/70 to-pink-700/50"
   }
 ];
 
@@ -212,8 +212,10 @@ export default function HeroSection() {
             </button>
           </div>
 
-          {/* Dots Navigation */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {/* Dots Navigation - Moved to overlap feather effect */}
+          <div 
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2 z-40 pb-8"
+          >
             {slides.map((_, index) => (
               <button
                 key={index}
