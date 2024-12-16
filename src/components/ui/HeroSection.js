@@ -16,7 +16,7 @@ const slides = [
     description: "Flexmood transforms your mindset, teaching you to master the art of financial dominance.",
     bgGradient: "from-black via-gold-900 to-yellow-700",
     image: wealth,
-    overlayColor: "bg-gradient-to-r from-yellow-900/60 via-black/60 to-yellow-700/60"
+    overlayColor: "bg-gradient-to-r from-yellow-900/60 to-yellow-700/60"
   },
   {
     text: "Technology is the new throne. Master it, and the world follows.",
@@ -24,7 +24,7 @@ const slides = [
     description: "Flexmood gives you the tools and edge to rise above in the age of innovation.",
     bgGradient: "from-black via-blue-900 to-electric-blue",
     image: technology,
-    overlayColor: "bg-gradient-to-r from-blue-900/50 via-black/50 to-blue-500/50"
+    overlayColor: "bg-gradient-to-r from-blue-900/50 to-blue-500/50"
   },
   {
     text: "Greatness isn't born; it's engineered. Build rare skills. Own the game.",
@@ -32,7 +32,7 @@ const slides = [
     description: "Flexmood forges you into a master of craft—irreplaceable, unstoppable, undeniable.",
     bgGradient: "from-black via-emerald-900 to-teal-800",
     image: skills,
-    overlayColor: "bg-gradient-to-r from-emerald-900/50 via-black/50 to-teal-800/50"
+    overlayColor: "bg-gradient-to-r from-emerald-900/50 to-teal-800/50"
   },
   {
     text: "The crown belongs to those who demand it. Rule your domain.",
@@ -40,15 +40,15 @@ const slides = [
     description: "Flexmood sharpens your strategy and vision to lead like the royalty you were meant to be.",
     bgGradient: "from-black via-royal-purple to-indigo-900",
     image: royalty,
-    overlayColor: "bg-gradient-to-r from-purple-900/50 via-black/50 to-indigo-900/50"
+    overlayColor: "bg-gradient-to-r from-purple-900/50 to-indigo-900/50"
   },
   {
     text: "Influence isn't given—it's seized. Shape hearts, command minds.",
     author: "Flexmood",
     description: "Flexmood unlocks the secrets of persuasion to build deeper, unshakable relationships.",
-    bgGradient: "from-black via-red-700 to-pink-500",
+    bgGradient: "from-black via-crimson-700 to-deep-pink",
     image: influence,
-    overlayColor: "bg-gradient-to-r from-red-900/50 via-black/50 to-pink-500/50"
+    overlayColor: "bg-gradient-to-r from-deep-purple-900/70 to-crimson-700/70"
   }
 ];
 
@@ -78,16 +78,13 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   const resetAutoSlideTimer = useCallback(() => {
-    // Clear existing timer
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
     
-    // Reset timer
     timerRef.current = setTimeout(nextSlide, 5000);
   }, [nextSlide]);
 
-  // Touch event handlers for mobile
   const handleTouchStart = (e) => {
     setTouchStart(e.touches[0].clientX);
   };
@@ -106,10 +103,8 @@ export default function HeroSection() {
   };
 
   useEffect(() => {
-    // Initial timer setup
     resetAutoSlideTimer();
 
-    // Cleanup function
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -123,6 +118,15 @@ export default function HeroSection() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Top Feather Effect */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/90 via-black/40 to-transparent z-30 pointer-events-none"
+        style={{
+          maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
+        }}
+      ></div>
+
       <div className="mx-auto max-w-screen-xl">
         <div className="relative h-[300px] sm:h-[350px] md:h-[calc(100vh-60px)] lg:h-[calc(100vh-60px)] overflow-hidden w-full">
           <div
@@ -155,13 +159,28 @@ export default function HeroSection() {
 
                 {/* Text Content */}
                 <div className="relative z-30">
-                  <h2 className="mb-4 text-xl sm:text-3xl md:text-4xl font-semibold text-white leading-tight sm:leading-snug drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+                  <h2 
+                    className="mb-4 text-xl sm:text-3xl md:text-4xl font-semibold text-white leading-tight sm:leading-snug"
+                    style={{
+                      textShadow: '0 4px 15px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.5)'
+                    }}
+                  >
                     &ldquo;{slide.text}&rdquo;
                   </h2>
-                  <p className="mb-4 text-base sm:text-xl font-medium text-white/80">
+                  <p 
+                    className="mb-4 text-base sm:text-xl font-medium text-white"
+                    style={{
+                      textShadow: '0 2px 8px rgba(0,0,0,0.6)'
+                    }}
+                  >
                     - {slide.author}
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-300 max-w-md mx-auto">
+                  <p 
+                    className="text-xs sm:text-sm text-gray-100 max-w-md mx-auto"
+                    style={{
+                      textShadow: '0 1px 4px rgba(0,0,0,0.5)'
+                    }}
+                  >
                     {slide.description}
                   </p>
                 </div>
@@ -205,6 +224,15 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      {/* Bottom Feather Effect */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-30 pointer-events-none"
+        style={{
+          maskImage: 'linear-gradient(to top, black 0%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to top, black 0%, transparent 100%)'
+        }}
+      ></div>
     </section>
   );
 }
