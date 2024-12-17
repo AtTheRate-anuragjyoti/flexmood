@@ -14,6 +14,7 @@ const MainPage = () => {
   const [books, setBooks] = useState([]); // Store all books
   const [filteredBooks, setFilteredBooks] = useState([]); // Store filtered books
   const [categoryLoading, setCategoryLoading] = useState(false); // Category change loading state
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // Track initial page load
   const [selectedCategory, setSelectedCategory] = useState('ambitious'); // Default category set to 'ambitious'
 
   // Fetch books from the API when the component mounts
@@ -26,8 +27,10 @@ const MainPage = () => {
         setFilteredBooks(
           jsonData.filter((book) => book.category.tabs.includes('ambitious')) // Default filter
         );
+        setIsInitialLoad(false); // Mark initial load as complete
       } catch (error) {
         console.log('An error occurred', error);
+        setIsInitialLoad(false); // Ensure loader is removed even if fetch fails
       }
     };
 
@@ -50,6 +53,9 @@ const MainPage = () => {
     }
   }, [selectedCategory, books]);
 
+  // Determine if loader should be shown
+  const showLoader = isInitialLoad || categoryLoading;
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       <TopBar />
@@ -64,7 +70,7 @@ const MainPage = () => {
 
       {/* Main content */}
       <main className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-900">
-        {categoryLoading ? (
+        {showLoader ? (
           <div className="flex justify-center items-center h-full w-full min-h-[30vh]">
             <div 
               className="w-12 h-12 border-4 rounded-full animate-spin" 
