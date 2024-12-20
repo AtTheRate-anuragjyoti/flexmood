@@ -127,7 +127,7 @@ export default function HeroSection() {
         }}
       ></div>
 
-      <div className="mx-auto max-w-screen-xl">
+      <div className="mx-auto">
         <div className="relative h-[300px] sm:h-[350px] md:h-[calc(100vh-60px)] lg:h-[calc(100vh-60px)] overflow-hidden w-full">
           <div
             ref={sliderRef}
@@ -147,7 +147,7 @@ export default function HeroSection() {
                     src={slide.image}
                     alt={`Flexmood slide ${index + 1}`}
                     fill
-                    sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px"
+                    sizes="100vw"
                     quality={75}
                     className="object-cover"
                     priority={index === 0}
@@ -158,7 +158,7 @@ export default function HeroSection() {
                 <div className={`absolute inset-0 z-20 ${slide.overlayColor}`}></div>
 
                 {/* Text Content */}
-                <div className="relative z-30">
+                <div className="relative z-30 mx-auto max-w-screen-xl">
                   <h2 
                     className="mb-4 text-xl sm:text-3xl md:text-4xl font-semibold text-white leading-tight sm:leading-snug"
                     style={{
