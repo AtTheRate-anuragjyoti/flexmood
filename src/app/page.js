@@ -7,7 +7,6 @@ import ProductCard from '@/components/ui/products_card';
 import TopBar from '@/components/ui/top_bar';
 import CategoryBar from '@/components/ui/category_bar';
 import userRegion from '@/utils/region';
-import FeedbackModal from '@/components/ui/FeedbackModal';
 
 const MainPage = () => {
   const region = userRegion((state) => state.region);
@@ -99,7 +98,6 @@ const MainPage = () => {
       </main>
 
       <SelectRegion />
-      <FeedbackModal />
       <BottomBar />
     </div>
   );
