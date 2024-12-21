@@ -21,7 +21,7 @@ const MainPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch(`/api/v1/fetch-books/`, {cache: 'no-store'});
+        const response = await fetch(`/api/v1/fetch-books/`);
         const jsonData = await response.json();
         setBooks(jsonData);
         setFilteredBooks(

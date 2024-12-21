@@ -41,6 +41,13 @@ const BottomBar = () => {
 
           {/* Navigation Links */}
           <nav className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap justify-center gap-6 lg:gap-12">
+              <a
+                href="https://forms.gle/sR7zSMFrPCiGJcuU9"
+                target="_blank"
+                className="text-gray-300 hover:text-white transition-all duration-300 text-sm font-medium tracking-wide hover:underline animate-pulse"
+              >
+                Provide Feedback
+              </a>
             {links.map((link) => (
               <a
                 key={link.href}
