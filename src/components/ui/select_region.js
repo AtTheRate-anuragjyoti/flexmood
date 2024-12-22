@@ -23,7 +23,7 @@ export default function SelectRegion() {
   }
 
   return (<>
-    {region == "" && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-md">
+    {region == "" && <div className="fixed h-full inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-md">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg mx-3">
         <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">Select your region</h2>
         <div className="space-y-4">
