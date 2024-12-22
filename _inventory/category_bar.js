@@ -28,37 +28,33 @@ const CategoryBar = ({ selectedCategory, setSelectedCategory }) => {
   };
 
   return (
-    <div className="flex w-full gap-2 p-2 bg-[#181e2c]">
+    <div className="flex w-full">
       {categories.map((category) => (
         <button
           key={category.id}
           onClick={() => handleCategoryClick(category.id)}
           className={`
             flex-1
-            flex
-            items-center
-            justify-center
-            px-6
-            py-2
+            px-4
+            py-3
             text-[15px]
             sm:text-sm
             md:text-base
             lg:text-xl
             font-serif
-            rounded-full
+            text-white
+            bg-gradient-to-r
+            ${category.gradient}
             relative
             transition-all
             duration-500
             ease-in-out
-            bg-gradient-to-r
-            ${category.gradient}
             whitespace-nowrap
             overflow-hidden
             ${ebGaramond.className}
-            text-white
             ${selectedCategory === category.id 
-              ? 'opacity-100'
-              : 'opacity-20'}
+              ? 'opacity-100 shadow-md shadow-black/30' 
+              : 'opacity-40'}
           `}
         >
           {category.label}
