@@ -6,6 +6,11 @@ const ebookSchema = new mongoose.Schema({
     required: true, // Mandatory field
     unique: true,   // Ensures uniqueness for each eBook
   },
+  dynamic_serial: {
+    type: Number,
+    required: true, // Mandatory field
+    unique: true,   // Ensures uniqueness for each eBook
+  },
   title: {
     type: String,
     required: true,

@@ -7,6 +7,7 @@ import Image from "next/image";
 import TopBar from "@/components/ui/top_bar";
 import BottomBar from "@/components/ui/bottom_bar";
 import localFont from 'next/font/local';
+import { ShoppingBag, Share2 } from 'lucide-react';
 
 const spaceGrotesk = localFont({ src: './spaceGrotesk.ttf' });
 
@@ -101,21 +102,23 @@ const ProductPage = ({ params }) => {
                   <Link
                     href={region === 'india' ? `/purchase/india/${params.serial}` : `/purchase/international/${params.serial}`}
                   >
-                    <button className="w-full text-sm sm:text-base rounded-md bg-gray-800 py-3 text-white transition-colors duration-300 hover:bg-gray-700 flex flex-row items-center justify-center">
+                    <button className="w-full text-sm sm:text-base rounded-md bg-gray-800 py-3 text-white transition-colors duration-300 hover:bg-gray-700 flex flex-row items-center justify-center gap-2">
+                      <ShoppingBag size={20} />
                       <span className={`${spaceGrotesk.className}`}>Own it</span>
                     </button>
                   </Link>
                   <button 
                     onClick={handleShare} 
-                    className="w-full text-sm sm:text-base rounded-md border border-gray-700 py-3 text-white transition-colors duration-300 hover:bg-gray-800 flex flex-row items-center justify-center"
+                    className="w-full text-sm sm:text-base rounded-md border border-gray-700 py-3 text-white transition-colors duration-300 hover:bg-gray-800 flex flex-row items-center justify-center gap-2"
                   >
+                    <Share2 size={20} />
                     <span className={`${spaceGrotesk.className}`}>Share</span>
                   </button>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="text-center">
+            <div className="text-center min-h-[400px]">
               <span className="text-gray-500 inline-block animate-pulse">
                 Loading product...
               </span>

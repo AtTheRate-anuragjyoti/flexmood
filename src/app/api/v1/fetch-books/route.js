@@ -8,7 +8,7 @@ export async function GET() {
     await dbConnect();
 
     // Fetch the required fields from the eBook model, including category.tabs
-    const data = await eBook.find().select("serial cover_img title price category.tabs");
+    const data = await eBook.find().select("serial dynamic_serial cover_img title price category.tabs");
 
     console.log("Fetched eBooks with tabs:", data); // Logs the fetched data
 
@@ -18,11 +18,7 @@ export async function GET() {
       return NextResponse.json({ message: "No eBooks found" }, { status: 404 });
     }
 
-    return NextResponse.json(data, {
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    });
+    return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching eBooks:", error);
     return NextResponse.json(

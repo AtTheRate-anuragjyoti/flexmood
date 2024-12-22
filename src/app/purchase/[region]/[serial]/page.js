@@ -244,7 +244,7 @@ const PurchasePage = ({ params }) => {
     return (
       <div className="flex flex-col min-h-screen bg-gray-900 text-white">
         <TopBar />
-        <main className="flex-grow flex justify-center items-center">
+        <main className="flex-grow flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <span className="text-gray-500 inline-block animate-pulse">
               Loading Product...
