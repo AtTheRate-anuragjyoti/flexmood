@@ -118,7 +118,7 @@ const ProductPage = ({ params }) => {
               </div>
             </div>
           ) : (
-            <div className="text-center min-h-[400px]">
+            <div className="flex items-center justify-center min-h-[400px]">
               <span className="text-gray-500 inline-block animate-pulse">
                 Loading product...
               </span>
