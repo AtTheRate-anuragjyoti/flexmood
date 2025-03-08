@@ -13,7 +13,17 @@ const CategoryBar = ({ onCategoryChange }) => {
       id: 'vault',
       label: 'Flexmood Vault',
       gradient: 'from-red-900 via-red-800 to-red-700',
-    }
+    },
+    {
+      id: 'courses',
+      label: 'Courses',
+      gradient: 'from-purple-900 via-purple-800 to-purple-700',
+    },
+    {
+      id: 'merchandise',
+      label: 'Merchandise',
+      gradient: 'from-green-900 via-green-800 to-green-700',
+    },
   ];
 
   const handleCategoryClick = (categoryId) => {
@@ -38,7 +48,7 @@ const CategoryBar = ({ onCategoryChange }) => {
             md:text-base
             lg:text-xl
             font-serif
-            rounded-[5px]
+            rounded-full
             relative
             transition-all
             duration-500

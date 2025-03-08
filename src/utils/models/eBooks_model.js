@@ -3,13 +3,12 @@ import mongoose from 'mongoose';
 const ebookSchema = new mongoose.Schema({
   serial: {
     type: Number,
-    required: true, // Mandatory field
-    unique: true,   // Ensures uniqueness for each eBook
+    required: true,
+    unique: true,
   },
   dynamic_serial: {
     type: Number,
-    required: true, // Mandatory field
-    unique: true,   // Ensures uniqueness for each eBook
+    required: true,
   },
   title: {
     type: String,
@@ -33,27 +32,37 @@ const ebookSchema = new mongoose.Schema({
   },
   cover_img: {
     type: String,
-    required: false, // Optional field
+    required: false,
   },
   fileName: {
     type: String,
-    required: true, // Mandatory field
-    unique: true,   // Ensures uniqueness for each eBook
+    required: true,
+    unique: true,
   },
   category: {
     tabs: {
-      type: [String], // Array of strings for category tabs
-      required: true, // Mandatory field
-      default: ["ambitious"], // Default value
+      type: [String],
+      required: true,
+      default: ["ambitious"],
     },
     tags: {
-      type: [String], // Array of strings for tags
-      required: false, // Optional field
+      type: [String],
+      required: false,
     },
   },
+  // New fields added
+  description: {
+    type: String,
+    required: true,
+    default: "# About This Book\n\nDescription coming soon...", // Default markdown
+  },
+  contents: {
+    type: String,
+    required: true,
+    default: "# Table of Contents\n\nContents coming soon...", // Default markdown
+  }
 });
 
-// Corrected model creation and naming
 const eBook = mongoose.models.eBook || mongoose.model('eBook', ebookSchema, 'eBooks');
 
 export default eBook;

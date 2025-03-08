@@ -45,7 +45,7 @@ const ProductCard = ({ coverImage, title, price, serial }) => {
       </div>
       <div className="p-4 relative z-10">
         <Link href={`/${region === 'India' ? 'india' : 'international'}/${serial}`} passHref>
-          <h2 className="text-lg font-bold text-gray-800 mb-2 hover:text-[#334247] transition-all relative z-10">
+          <h2 className="text-lg font-bold text-gray-800 mb-2 hover:text-[#40444a] transition-all relative z-10">
             {truncateTitle(title, 30)}
           </h2>
         </Link>
