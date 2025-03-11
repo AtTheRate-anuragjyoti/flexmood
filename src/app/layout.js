@@ -37,7 +37,12 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        /> 
+      </head>
+      <body>
+
+        {children}
+
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-8FBVT2MFT3"
@@ -54,11 +59,11 @@ export default function RootLayout({ children }) {
         </Script>
         <Script
           async
+          strategy="afterInteractive"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9072691055279641"
           crossOrigin="anonymous"
         />
-      </head>
-      <body>{children}</body>
+      </body>
     </html>
   );
 }
