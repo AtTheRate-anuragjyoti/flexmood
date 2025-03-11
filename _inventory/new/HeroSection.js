@@ -82,7 +82,7 @@ export default function HeroSection() {
       clearTimeout(timerRef.current);
     }
     
-    timerRef.current = setTimeout(nextSlide, 6000);
+    timerRef.current = setTimeout(nextSlide, 5000);
   }, [nextSlide]);
 
   const handleTouchStart = (e) => {

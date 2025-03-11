@@ -26,7 +26,10 @@ export default function RootLayout({ children }) {
           name="google-site-verification"
           content="Dibu5YjA3RGtBImMW0z-No4vAdfHxHdRNS3EsHAnuLM"
         />
-        <meta name="google-adsense-account" content="ca-pub-9072691055279641"></meta>
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-9072691055279641"
+        ></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
@@ -49,6 +52,11 @@ export default function RootLayout({ children }) {
             gtag('config', 'G-8FBVT2MFT3');
           `}
         </Script>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9072691055279641"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>{children}</body>
     </html>
