@@ -59,7 +59,7 @@ export default function RootLayout({ children }) {
         </Script>
         <Script
           async
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9072691055279641"
           crossOrigin="anonymous"
         />
